@@ -1,61 +1,113 @@
+/**
+ * Original work Copyright (c) 2009-2013 Jeff Mott
+ * Modified work Copyright (c) 2020 Sergio Rando <sergio.rando@yahoo.com>
+ */
+
 "use strict";
 
-/*
-CryptoJS v3.1.2
-code.google.com/p/crypto-js
-(c) 2009-2013 by Jeff Mott. All rights reserved.
-code.google.com/p/crypto-js/wiki/License
-*/
-(function () {
-    // Shortcuts
-    let C = CryptoJS;
-    let C_lib = C.lib;
-    let StreamCipher = C_lib.StreamCipher;
-    let C_algo = C.algo;
+import { WordArray } from "./wordarray.js"
+import { Cipher, ENC_XFORM_MODE, DEC_XFORM_MODE, CipherHelper, StreamCipherProcessor } from "./cipher-core.js";
 
-    /**
-     * RC4 stream cipher algorithm.
-     */
-    let RC4 = C_algo.RC4 = StreamCipher.extend({
-        _doReset() {
-            // Shortcuts
-            let key = this._key;
-            let keyWords = key.words;
-            let keySigBytes = key.sigBytes;
+/**
+ * RC4 stream cipher algorithm.
+ */
+class ClassCipherRC4 extends Cipher {
+	constructor() {
+		super();
 
-            // Init sbox
-            let S = this._S = [];
-            for (let i = 0; i < 256; i++) {
-                S[i] = i;
-            }
+		this.keySize = 256/32;
+		this.ivSize = 0;
+	}
 
-            // Key setup
-            for (let i = 0, j = 0; i < 256; i++) {
-                let keyByteIndex = i % keySigBytes;
-                let keyByte = (keyWords[keyByteIndex >>> 2] >>> (24 - (keyByteIndex % 4) * 8)) & 0xff;
+	/**
+	 * Creates this cipher in encryption mode.
+	 *
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 *
+	 * @return {StreamCipherProcessor} A cipher instance.
+	 *
+	 * @example
+	 *
+	 *     var cipher = CipherRC4.createEncryptor(keyWordArray, { 'iv': ivWordArray });
+	 */
+	createEncryptor(key, cfg) {
+		return new CipherRC4Processor(ENC_XFORM_MODE, key, cfg);
+	}
 
-                j = (j + S[i] + keyByte) % 256;
+	/**
+	 * Creates this cipher in decryption mode.
+	 *
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 *
+	 * @return {StreamCipherProcessor} A cipher instance.
+	 *
+	 * @example
+	 *
+	 *     var cipher = CipherRC4.createDecryptor(keyWordArray, { 'iv': ivWordArray });
+	 */
+	createDecryptor(key, cfg) {
+		return new CipherRC4Processor(DEC_XFORM_MODE, key, cfg);
+	}
+}
 
-                // Swap
-                let t = S[i];
-                S[i] = S[j];
-                S[j] = t;
-            }
+export const CipherRC4 = new ClassCipherRC4();
 
-            // Counters
-            this._i = this._j = 0;
-        },
+/**
+ * RC4 stream cipher algorithm.
+ */
+class CipherRC4Processor extends StreamCipherProcessor {
+	/**
+	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 */
+	constructor(xformMode, key, cfg) {
+		super(xformMode, key, cfg);
 
-        _doProcessBlock(M, offset) {
-            M[offset] ^= generateKeystreamWord.call(this);
-        },
+		/** @type {Array<number>} */ this._S;
+		/** @type {number} */ this._i;
+		/** @type {number} */ this._j;
+	}
 
-        keySize: 256/32,
+	_doReset() {
+		// Shortcuts
+		let key = this._key;
+		let keyWords = key.words;
+		let keySigBytes = key.sigBytes;
 
-        ivSize: 0
-    });
+		// Init sbox
+		let S = this._S = [];
+		for (let i = 0; i < 256; i++) {
+			S[i] = i;
+		}
 
-    function generateKeystreamWord() {
+		// Key setup
+		for (let i = 0, j = 0; i < 256; i++) {
+			let keyByteIndex = i % keySigBytes;
+			let keyByte = (keyWords[keyByteIndex >>> 2] >>> (24 - (keyByteIndex % 4) * 8)) & 0xff;
+
+			j = (j + S[i] + keyByte) % 256;
+
+			// Swap
+			let t = S[i];
+			S[i] = S[j];
+			S[j] = t;
+		}
+
+		// Counters
+		this._i = this._j = 0;
+	}
+
+	_doProcessBlock(M, offset) {
+		M[offset] ^= this.generateKeystreamWord();
+	}
+
+	/**
+	 * @protected
+	 */
+	generateKeystreamWord() {
         // Shortcuts
         let S = this._S;
         let i = this._i;
@@ -81,47 +133,94 @@ code.google.com/p/crypto-js/wiki/License
 
         return keystreamWord;
     }
+}
 
-    /**
-     * Shortcut functions to the cipher's object interface.
-     *
-     * @example
-     *
-     *     let ciphertext = CryptoJS.RC4.encrypt(message, key, cfg);
-     *     let plaintext  = CryptoJS.RC4.decrypt(ciphertext, key, cfg);
-     */
-    C.RC4 = StreamCipher._createHelper(RC4);
+/**
+ * Shortcut functions to the cipher's object interface.
+ *
+ * @example
+ *
+ *     let ciphertext = RC4.encrypt(message, key, cfg);
+ *     let plaintext  = RC4.decrypt(ciphertext, key, cfg);
+ */
+export const RC4 = new CipherHelper(CipherRC4);
 
-    /**
-     * Modified RC4 stream cipher algorithm.
-     */
-    let RC4Drop = C_algo.RC4Drop = RC4.extend({
-        /**
-         * Configuration options.
-         *
-         * @property {number} drop The number of keystream words to drop. Default 192
-         */
-        cfg: RC4.cfg.extend({
-            drop: 192
-        }),
+/**
+ * RC4 Drop stream cipher algorithm.
+ */
+class ClassCipherRC4Drop extends ClassCipherRC4 {
+	constructor() {
+		super();
+	}
 
-        _doReset() {
-            RC4._doReset.call(this);
+	/**
+	 * Creates this cipher in encryption mode.
+	 *
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 *
+	 * @return {StreamCipherProcessor} A cipher instance.
+	 *
+	 * @example
+	 *
+	 *     var cipher = CipherRC4Drop.createEncryptor(keyWordArray, { 'iv': ivWordArray });
+	 */
+	createEncryptor(key, cfg) {
+		return new CipherRC4DropProcessor(ENC_XFORM_MODE, key, cfg);
+	}
 
-            // Drop
-            for (let i = this.cfg.drop; i > 0; i--) {
-                generateKeystreamWord.call(this);
-            }
-        }
-    });
+	/**
+	 * Creates this cipher in decryption mode.
+	 *
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 *
+	 * @return {StreamCipherProcessor} A cipher instance.
+	 *
+	 * @example
+	 *
+	 *     var cipher = CipherRC4Drop.createDecryptor(keyWordArray, { 'iv': ivWordArray });
+	 */
+	createDecryptor(key, cfg) {
+		return new CipherRC4DropProcessor(DEC_XFORM_MODE, key, cfg);
+	}
+}
 
-    /**
-     * Shortcut functions to the cipher's object interface.
-     *
-     * @example
-     *
-     *     let ciphertext = CryptoJS.RC4Drop.encrypt(message, key, cfg);
-     *     let plaintext  = CryptoJS.RC4Drop.decrypt(ciphertext, key, cfg);
-     */
-    C.RC4Drop = StreamCipher._createHelper(RC4Drop);
-}());
+export const CipherRC4Drop = new ClassCipherRC4Drop();
+
+/**
+ * Modified RC4 stream cipher algorithm.
+ */
+class CipherRC4DropProcessor extends CipherRC4Processor {
+	/**
+	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 */
+	constructor(xformMode, key, cfg) {
+		super(xformMode, key, cfg);
+
+		this.drop = 192;
+
+		let drop = cfg && cfg['drop'] || undefined; if (drop !== undefined && Number.isInteger(drop)) this.drop = drop;
+	}
+
+	_doReset() {
+		super._doReset();
+
+		// Drop
+		for (let i = this.drop; i > 0; i--) {
+			this.generateKeystreamWord();
+		}
+	}
+}
+
+/**
+ * Shortcut functions to the cipher's object interface.
+ *
+ * @example
+ *
+ *     let ciphertext = RC4Drop.encrypt(message, key, cfg);
+ *     let plaintext  = RC4Drop.decrypt(ciphertext, key, cfg);
+ */
+export const RC4Drop = new CipherHelper(CipherRC4Drop);

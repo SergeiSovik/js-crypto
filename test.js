@@ -32,6 +32,9 @@ import { SHA3 } from "./modules/sha3.js"
 import { AES } from "./modules/aes.js"
 import { OpenSSL } from "./modules/format.js";
 import { DES, TripleDES } from "./modules/tripledes.js"
+import { Rabbit } from "./modules/rabbit.js"
+import { RabbitLegacy } from "./modules/rabbit-legacy.js"
+import { RC4, RC4Drop } from "./modules/rc4.js"
 
 let wa = Utf8.parse('ABCD');
 
@@ -78,4 +81,40 @@ for (let i = 0; i < list.length; i++) {
 	let dec = TripleDES.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
 
 	console.log('TripleDES(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
+}
+
+{
+	let data = 'ABCD';
+	let password = '1234';
+	let enc = Rabbit.encrypt(data, password).toString(OpenSSL);
+	let dec = Rabbit.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+
+	console.log('Rabbit(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
+}
+
+{
+	let data = 'ABCD';
+	let password = '1234';
+	let enc = RabbitLegacy.encrypt(data, password).toString(OpenSSL);
+	let dec = RabbitLegacy.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+
+	console.log('RabbitLegacy(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
+}
+
+{
+	let data = 'ABCD';
+	let password = '1234';
+	let enc = RC4.encrypt(data, password).toString(OpenSSL);
+	let dec = RC4.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+
+	console.log('RC4(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
+}
+
+{
+	let data = 'ABCD';
+	let password = '1234';
+	let enc = RC4Drop.encrypt(data, password).toString(OpenSSL);
+	let dec = RC4Drop.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+
+	console.log('RC4Drop(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }

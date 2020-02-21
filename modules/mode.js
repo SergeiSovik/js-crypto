@@ -5,7 +5,7 @@
 
 "use strict";
 
-import { CipherProcessor } from "./cipher-processor.js"
+import { BlockCipherProcessor } from "./cipher-core.js"
 
 /**
  * @abstract base block cipher mode template.
@@ -15,7 +15,7 @@ export class Mode {
 	 * @abstract
 	 * Creates this mode for encryption.
 	 *
-	 * @param {CipherProcessor} cipher A block cipher instance.
+	 * @param {BlockCipherProcessor} cipher A block cipher instance.
 	 * @param {Array<number>} iv The IV words.
 	 * 
 	 * @returns {ModeProcessor}
@@ -26,7 +26,7 @@ export class Mode {
 	 * @abstract
 	 * Creates this mode for encryption.
 	 *
-	 * @param {CipherProcessor} cipher A block cipher instance.
+	 * @param {BlockCipherProcessor} cipher A block cipher instance.
 	 * @param {Array<number>} iv The IV words.
 	 * 
 	 * @returns {ModeProcessor}
@@ -39,7 +39,7 @@ export class Mode {
  */
 export class ModeProcessor {
 	/**
-	 * @param {CipherProcessor} cipher A block cipher instance.
+	 * @param {BlockCipherProcessor} cipher A block cipher instance.
 	 * @param {Array<number>} iv The IV words.
 	 *
 	 * @example
@@ -47,7 +47,7 @@ export class ModeProcessor {
 	 *     let mode = CryptoJS.CBC.createEncryptor(cipher, iv.words);
 	 */
 	constructor(cipher, iv) {
-		/** @type {CipherProcessor} */ this._cipher;
+		/** @type {BlockCipherProcessor} */ this._cipher;
 		/** @type {Array<number> | undefined} */ this._iv;
 		/** @type {Array<number>} */ this._prevBlock;
 
@@ -57,7 +57,7 @@ export class ModeProcessor {
 	/**
 	 * Initializes a newly created mode.
 	 *
-	 * @param {CipherProcessor} cipher A block cipher instance.
+	 * @param {BlockCipherProcessor} cipher A block cipher instance.
 	 * @param {Array<number>} iv The IV words.
 	 */
 	init(cipher, iv) {
@@ -79,4 +79,4 @@ export class ModeProcessor {
 	processBlock(words, offset) {}
 }
 
-/** @typedef {function(CipherProcessor, Array<number>): ModeProcessor} ModeCreator */ export var ModeCreator;
+/** @typedef {function(BlockCipherProcessor, Array<number>): ModeProcessor} ModeCreator */ export var ModeCreator;

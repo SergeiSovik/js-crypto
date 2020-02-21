@@ -149,18 +149,4 @@ export class CipherProcessor extends BufferedBlockAlgorithm {
 	 * @returns {WordArray}
 	 */
 	_doFinalize() {}
-
-	/**
-	 * @abstract
-	 * @param {Array<number>} M 
-	 * @param {number} offset 
-	 */
-	encryptBlock(M, offset) {}
-
-	/**
-	 * @abstract
-	 * @param {Array<number>} M 
-	 * @param {number} offset 
-	 */
-	decryptBlock(M, offset) {}
 }

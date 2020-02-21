@@ -36,7 +36,7 @@ export class Cipher {
 	 * @param {WordArray} key The key.
 	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
 	 *
-	 * @return {BlockCipherProcessor} A cipher instance.
+	 * @return {CipherProcessor} A cipher instance.
 	 *
 	 * @example
 	 *
@@ -52,7 +52,7 @@ export class Cipher {
 	 * @param {WordArray} key The key.
 	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
 	 *
-	 * @return {BlockCipherProcessor} A cipher instance.
+	 * @return {CipherProcessor} A cipher instance.
 	 *
 	 * @example
 	 *
@@ -112,11 +112,11 @@ export class CipherHelper {
  *
  * @property {number} blockSize The number of 32-bit words this cipher operates on. Default: 1 (32 bits)
  */
-export class StreamCipher extends CipherProcessor {
+export class StreamCipherProcessor extends CipherProcessor {
 	/**
 	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
 	 * @param {WordArray} key The key.
-	 * @param {ConfigCipher=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	constructor(xformMode, key, cfg) {
 		super(xformMode, key, cfg);
@@ -230,6 +230,20 @@ export class BlockCipherProcessor extends CipherProcessor {
 
 		return finalProcessedBlocks;
 	}
+
+	/**
+	 * @abstract
+	 * @param {Array<number>} M 
+	 * @param {number} offset 
+	 */
+	encryptBlock(M, offset) {}
+
+	/**
+	 * @abstract
+	 * @param {Array<number>} M 
+	 * @param {number} offset 
+	 */
+	decryptBlock(M, offset) {}
 }
 
 /**
@@ -289,22 +303,39 @@ class CipherWrapper {
 	encryptSerialized(cipher, message, key, cfg) {
 		// Encrypt
 		let processor = cipher.createEncryptor(key, cfg);
-		let ciphertext = processor.finalize(message);
-
-		// Shortcut
-		let cipherCfg = processor.cfg;
-
 		// Create and return serializable cipher params
-		return new CipherParams({
-			'ciphertext': ciphertext,
-			'key': key,
-			'iv': cipherCfg.iv,
-			'algorithm': cipher,
-			'mode': cipherCfg.mode,
-			'padding': cipherCfg.padding,
-			'blockSize': processor.blockSize,
-			'formatter': cfg.format
-		});
+		if (processor instanceof BlockCipherProcessor) {
+			let blockProcessor = /** @type {BlockCipherProcessor} */ ( processor );
+			let ciphertext = blockProcessor.finalize(message);
+
+			// Shortcut
+			let cipherCfg = blockProcessor.cfg;
+	
+			return new CipherParams({
+				'ciphertext': ciphertext,
+				'key': key,
+				'iv': cipherCfg.iv,
+				'algorithm': cipher,
+				'mode': cipherCfg.mode,
+				'padding': cipherCfg.padding,
+				'blockSize': processor.blockSize,
+				'formatter': cfg.format
+			});
+		} else {
+			let ciphertext = processor.finalize(message);
+
+			// Shortcut
+			let cipherCfg = processor.cfg;
+	
+			return new CipherParams({
+				'ciphertext': ciphertext,
+				'key': key,
+				'iv': cipherCfg.iv,
+				'algorithm': cipher,
+				'blockSize': processor.blockSize,
+				'formatter': cfg.format
+			});
+		}
 	}
 
 	/**
@@ -516,8 +547,8 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 	 *
 	 * @example
 	 *
-	 *     let ciphertextParams = CryptoJS.lib.PasswordBasedCipher.encrypt(CryptoJS.algo.AES, message, 'password');
-	 *     let ciphertextParams = CryptoJS.lib.PasswordBasedCipher.encrypt(CryptoJS.algo.AES, message, 'password', { format: CryptoJS.format.OpenSSL });
+	 *     let ciphertextParams = ClassPasswordBasedCipher.encrypt(CipherAES, message, 'password');
+	 *     let ciphertextParams = ClassPasswordBasedCipher.encrypt(CipherAES, message, 'password', { format: CryptoJS.format.OpenSSL });
 	 */
 	encrypt(cipher, message, password, cfg) {
 		this.updateConfig(cfg);
@@ -553,8 +584,8 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 	 *
 	 * @example
 	 *
-	 *     let plaintext = CryptoJS.lib.PasswordBasedCipher.decrypt(CryptoJS.algo.AES, formattedCiphertext, 'password', { format: CryptoJS.format.OpenSSL });
-	 *     let plaintext = CryptoJS.lib.PasswordBasedCipher.decrypt(CryptoJS.algo.AES, ciphertextParams, 'password', { format: CryptoJS.format.OpenSSL });
+	 *     let plaintext = ClassPasswordBasedCipher.decrypt(CipherAES, formattedCiphertext, 'password', { format: CryptoJS.format.OpenSSL });
+	 *     let plaintext = ClassPasswordBasedCipher.decrypt(CipherAES, ciphertextParams, 'password', { format: CryptoJS.format.OpenSSL });
 	 */
 	decrypt(cipher, ciphertext, password, cfg) {
 		this.updateConfig(cfg);

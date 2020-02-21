@@ -37,9 +37,6 @@ endef
 
 # List of excluded modules
 define EXCLUDES
-	modules/rabbit.js
-	modules/rabbit-legacy.js
-	modules/rc4.js
 endef
 
 # Detect Current Dir Name (js-example)

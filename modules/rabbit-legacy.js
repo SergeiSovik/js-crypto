@@ -1,124 +1,175 @@
+/**
+ * Original work Copyright (c) 2009-2013 Jeff Mott
+ * Modified work Copyright (c) 2020 Sergio Rando <sergio.rando@yahoo.com>
+ */
+
 "use strict";
 
-/*
-CryptoJS v3.1.2
-code.google.com/p/crypto-js
-(c) 2009-2013 by Jeff Mott. All rights reserved.
-code.google.com/p/crypto-js/wiki/License
-*/
-(function () {
-    // Shortcuts
-    let C = CryptoJS;
-    let C_lib = C.lib;
-    let StreamCipher = C_lib.StreamCipher;
-    let C_algo = C.algo;
+import { WordArray } from "./wordarray.js"
+import { Cipher, ENC_XFORM_MODE, DEC_XFORM_MODE, CipherHelper, StreamCipherProcessor } from "./cipher-core.js";
 
-    // Reusable objects
-    let S  = [];
-    let C_ = [];
-    let G  = [];
+/**
+ * Rabbit stream cipher algorithm.
+ */
+class ClassCipherRabbitLegacy extends Cipher {
+	constructor() {
+		super();
 
-    /**
-     * Rabbit stream cipher algorithm.
-     *
-     * This is a legacy version that neglected to convert the key to little-endian.
-     * This error doesn't affect the cipher's security,
-     * but it does affect its compatibility with other implementations.
-     */
-    let RabbitLegacy = C_algo.RabbitLegacy = StreamCipher.extend({
-        _doReset() {
-            // Shortcuts
-            let K = this._key.words;
-            let iv = this.cfg.iv;
+		this.ivSize = 64/32;
+	}
 
-            // Generate initial state values
-            let X = this._X = [
-                K[0], (K[3] << 16) | (K[2] >>> 16),
-                K[1], (K[0] << 16) | (K[3] >>> 16),
-                K[2], (K[1] << 16) | (K[0] >>> 16),
-                K[3], (K[2] << 16) | (K[1] >>> 16)
-            ];
+	/**
+	 * Creates this cipher in encryption mode.
+	 *
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 *
+	 * @return {StreamCipherProcessor} A cipher instance.
+	 *
+	 * @example
+	 *
+	 *     var cipher = CipherRabbit.createEncryptor(keyWordArray, { 'iv': ivWordArray });
+	 */
+	createEncryptor(key, cfg) {
+		return new CipherRabbitLegacyProcessor(ENC_XFORM_MODE, key, cfg);
+	}
 
-            // Generate initial counter values
-            let C = this._C = [
-                (K[2] << 16) | (K[2] >>> 16), (K[0] & 0xffff0000) | (K[1] & 0x0000ffff),
-                (K[3] << 16) | (K[3] >>> 16), (K[1] & 0xffff0000) | (K[2] & 0x0000ffff),
-                (K[0] << 16) | (K[0] >>> 16), (K[2] & 0xffff0000) | (K[3] & 0x0000ffff),
-                (K[1] << 16) | (K[1] >>> 16), (K[3] & 0xffff0000) | (K[0] & 0x0000ffff)
-            ];
+	/**
+	 * Creates this cipher in decryption mode.
+	 *
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 *
+	 * @return {StreamCipherProcessor} A cipher instance.
+	 *
+	 * @example
+	 *
+	 *     var cipher = CipherRabbit.createDecryptor(keyWordArray, { 'iv': ivWordArray });
+	 */
+	createDecryptor(key, cfg) {
+		return new CipherRabbitLegacyProcessor(DEC_XFORM_MODE, key, cfg);
+	}
+}
 
-            // Carry bit
-            this._b = 0;
+export const CipherRabbitLegacy = new ClassCipherRabbitLegacy();
 
-            // Iterate the system four times
-            for (let i = 0; i < 4; i++) {
-                nextState.call(this);
-            }
+// Reusable objects
+let S  = [];
+let C_ = [];
+let G  = [];
 
-            // Modify the counters
-            for (let i = 0; i < 8; i++) {
-                C[i] ^= X[(i + 4) & 7];
-            }
+/**
+ * Rabbit stream cipher algorithm.
+ *
+ * This is a legacy version that neglected to convert the key to little-endian.
+ * This error doesn't affect the cipher's security,
+ * but it does affect its compatibility with other implementations.
+ */
+class CipherRabbitLegacyProcessor extends StreamCipherProcessor {
+	/**
+	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
+	 * @param {WordArray} key The key.
+	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 */
+	constructor(xformMode, key, cfg) {
+		super(xformMode, key, cfg);
 
-            // IV setup
-            if (iv) {
-                // Shortcuts
-                let IV = iv.words;
-                let IV_0 = IV[0];
-                let IV_1 = IV[1];
+		/** @type {Array<number>} */ this._X;
+		/** @type {Array<number>} */ this._C;
+		/** @type {number} */ this._b;
+	}
 
-                // Generate four subvectors
-                let i0 = (((IV_0 << 8) | (IV_0 >>> 24)) & 0x00ff00ff) | (((IV_0 << 24) | (IV_0 >>> 8)) & 0xff00ff00);
-                let i2 = (((IV_1 << 8) | (IV_1 >>> 24)) & 0x00ff00ff) | (((IV_1 << 24) | (IV_1 >>> 8)) & 0xff00ff00);
-                let i1 = (i0 >>> 16) | (i2 & 0xffff0000);
-                let i3 = (i2 << 16)  | (i0 & 0x0000ffff);
+	_doReset() {
+		// Shortcuts
+		let K = this._key.words;
+		let iv = this.cfg.iv;
 
-                // Modify counter values
-                C[0] ^= i0;
-                C[1] ^= i1;
-                C[2] ^= i2;
-                C[3] ^= i3;
-                C[4] ^= i0;
-                C[5] ^= i1;
-                C[6] ^= i2;
-                C[7] ^= i3;
+		// Generate initial state values
+		let X = this._X = [
+			K[0], (K[3] << 16) | (K[2] >>> 16),
+			K[1], (K[0] << 16) | (K[3] >>> 16),
+			K[2], (K[1] << 16) | (K[0] >>> 16),
+			K[3], (K[2] << 16) | (K[1] >>> 16)
+		];
 
-                // Iterate the system four times
-                for (let i = 0; i < 4; i++) {
-                    nextState.call(this);
-                }
-            }
-        },
+		// Generate initial counter values
+		let C = this._C = [
+			(K[2] << 16) | (K[2] >>> 16), (K[0] & 0xffff0000) | (K[1] & 0x0000ffff),
+			(K[3] << 16) | (K[3] >>> 16), (K[1] & 0xffff0000) | (K[2] & 0x0000ffff),
+			(K[0] << 16) | (K[0] >>> 16), (K[2] & 0xffff0000) | (K[3] & 0x0000ffff),
+			(K[1] << 16) | (K[1] >>> 16), (K[3] & 0xffff0000) | (K[0] & 0x0000ffff)
+		];
 
-        _doProcessBlock(M, offset) {
-            // Shortcut
-            let X = this._X;
+		// Carry bit
+		this._b = 0;
 
-            // Iterate the system
-            nextState.call(this);
+		// Iterate the system four times
+		for (let i = 0; i < 4; i++) {
+			this.nextState();
+		}
 
-            // Generate four keystream words
-            S[0] = X[0] ^ (X[5] >>> 16) ^ (X[3] << 16);
-            S[1] = X[2] ^ (X[7] >>> 16) ^ (X[5] << 16);
-            S[2] = X[4] ^ (X[1] >>> 16) ^ (X[7] << 16);
-            S[3] = X[6] ^ (X[3] >>> 16) ^ (X[1] << 16);
+		// Modify the counters
+		for (let i = 0; i < 8; i++) {
+			C[i] ^= X[(i + 4) & 7];
+		}
 
-            for (let i = 0; i < 4; i++) {
-                // Swap endian
-                S[i] = (((S[i] << 8)  | (S[i] >>> 24)) & 0x00ff00ff) |
-                       (((S[i] << 24) | (S[i] >>> 8))  & 0xff00ff00);
+		// IV setup
+		if (iv) {
+			// Shortcuts
+			let IV = iv.words;
+			let IV_0 = IV[0];
+			let IV_1 = IV[1];
 
-                // Encrypt
-                M[offset + i] ^= S[i];
-            }
-        },
+			// Generate four subvectors
+			let i0 = (((IV_0 << 8) | (IV_0 >>> 24)) & 0x00ff00ff) | (((IV_0 << 24) | (IV_0 >>> 8)) & 0xff00ff00);
+			let i2 = (((IV_1 << 8) | (IV_1 >>> 24)) & 0x00ff00ff) | (((IV_1 << 24) | (IV_1 >>> 8)) & 0xff00ff00);
+			let i1 = (i0 >>> 16) | (i2 & 0xffff0000);
+			let i3 = (i2 << 16)  | (i0 & 0x0000ffff);
 
-        blockSize: 128/32,
+			// Modify counter values
+			C[0] ^= i0;
+			C[1] ^= i1;
+			C[2] ^= i2;
+			C[3] ^= i3;
+			C[4] ^= i0;
+			C[5] ^= i1;
+			C[6] ^= i2;
+			C[7] ^= i3;
 
-        ivSize: 64/32
-    });
+			// Iterate the system four times
+			for (let i = 0; i < 4; i++) {
+				this.nextState();
+			}
+		}
+	}
 
-    function nextState() {
+	_doProcessBlock(M, offset) {
+		// Shortcut
+		let X = this._X;
+
+		// Iterate the system
+		this.nextState();
+
+		// Generate four keystream words
+		S[0] = X[0] ^ (X[5] >>> 16) ^ (X[3] << 16);
+		S[1] = X[2] ^ (X[7] >>> 16) ^ (X[5] << 16);
+		S[2] = X[4] ^ (X[1] >>> 16) ^ (X[7] << 16);
+		S[3] = X[6] ^ (X[3] >>> 16) ^ (X[1] << 16);
+
+		for (let i = 0; i < 4; i++) {
+			// Swap endian
+			S[i] = (((S[i] << 8)  | (S[i] >>> 24)) & 0x00ff00ff) |
+					(((S[i] << 24) | (S[i] >>> 8))  & 0xff00ff00);
+
+			// Encrypt
+			M[offset + i] ^= S[i];
+		}
+	}
+
+	/**
+	 * @private
+	 */
+    nextState() {
         // Shortcuts
         let X = this._X;
         let C = this._C;
@@ -165,14 +216,14 @@ code.google.com/p/crypto-js/wiki/License
         X[6] = (G[6] + ((G[5] << 16) | (G[5] >>> 16)) + ((G[4] << 16) | (G[4] >>> 16))) | 0;
         X[7] = (G[7] + ((G[6] << 8)  | (G[6] >>> 24)) + G[5]) | 0;
     }
+}
 
-    /**
-     * Shortcut functions to the cipher's object interface.
-     *
-     * @example
-     *
-     *     let ciphertext = CryptoJS.RabbitLegacy.encrypt(message, key, cfg);
-     *     let plaintext  = CryptoJS.RabbitLegacy.decrypt(ciphertext, key, cfg);
-     */
-    C.RabbitLegacy = StreamCipher._createHelper(RabbitLegacy);
-}());
+/**
+ * Shortcut functions to the cipher's object interface.
+ *
+ * @example
+ *
+ *     let ciphertext = RabbitLegacy.encrypt(message, key, cfg);
+ *     let plaintext  = RabbitLegacy.decrypt(ciphertext, key, cfg);
+ */
+export const RabbitLegacy = new CipherHelper(CipherRabbitLegacy);
