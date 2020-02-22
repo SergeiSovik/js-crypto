@@ -23,7 +23,7 @@ class EncoderBase64 extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let base64String = Encoder.Base64.stringify(wordArray);
+	 *     let base64String = Base64.stringify(wordArray);
 	 */
 	stringify(wordArray) {
 		// Shortcuts
@@ -70,7 +70,7 @@ class EncoderBase64 extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let wordArray = CryptoJS.enc.Base64.parse(base64String);
+	 *     let wordArray = Base64.parse(base64String);
 	 */
 	parse(base64Str) {
 		// Shortcuts

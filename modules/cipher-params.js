@@ -35,11 +35,11 @@ export class CipherParams {
 	 *         'key': keyWordArray,
 	 *         'iv': ivWordArray,
 	 *         'salt': saltWordArray,
-	 *         'algorithm': CryptoJS.AES,
-	 *         'mode': CryptoJS.CBC,
-	 *         'padding': CryptoJS.PKCS7,
+	 *         'algorithm': AES,
+	 *         'mode': CBC,
+	 *         'padding': PKCS7,
 	 *         'blockSize': 4,
-	 *         'formatter': CryptoJS.OpenSSL
+	 *         'formatter': OpenSSL
 	 *     });
 	 */
 	constructor(cfg) {
@@ -92,7 +92,7 @@ export class CipherParams {
 	 *
 	 *     let string = cipherParams + '';
 	 *     let string = cipherParams.toString();
-	 *     let string = cipherParams.toString(CryptoJS.format.OpenSSL);
+	 *     let string = cipherParams.toString(OpenSSL);
 	 */
 	toString(formatter) {
 		return (formatter || this.formatter).stringify(this);

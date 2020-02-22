@@ -21,7 +21,7 @@ class EncoderLatin1 extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let latin1String = CryptoJS.Latin1.stringify(wordArray);
+	 *     let latin1String = Latin1.stringify(wordArray);
 	 */
 	stringify(wordArray) {
 		// Shortcuts
@@ -49,7 +49,7 @@ class EncoderLatin1 extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let wordArray = CryptoJS.Latin1.parse(latin1String);
+	 *     let wordArray = Latin1.parse(latin1String);
 	 */
 	parse(latin1Str) {
 		// Shortcut

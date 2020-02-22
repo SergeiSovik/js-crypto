@@ -6,7 +6,7 @@
 "use strict";
 
 import { ModeProcessor, Mode } from "./mode.js"
-import { CipherProcessor } from "./cipher-processor.js";
+import { BlockCipherProcessor } from "./cipher-core.js"
 
 /**
  * Cipher Feedback block mode.
@@ -15,7 +15,7 @@ export class ModeCFB extends Mode {
 	/**
 	 * Creates this mode for encryption.
 	 *
-	 * @param {CipherProcessor} cipher A block cipher instance.
+	 * @param {BlockCipherProcessor} cipher A block cipher instance.
 	 * @param {Array<number>} iv The IV words.
 	 * 
 	 * @returns {ModeProcessor}
@@ -27,7 +27,7 @@ export class ModeCFB extends Mode {
 	/**
 	 * Creates this mode for encryption.
 	 *
-	 * @param {CipherProcessor} cipher A block cipher instance.
+	 * @param {BlockCipherProcessor} cipher A block cipher instance.
 	 * @param {Array<number>} iv The IV words.
 	 * 
 	 * @returns {ModeProcessor}
@@ -99,7 +99,7 @@ class ModeCFBDecryptor extends ModeProcessor {
  * @param {Array<number>} words 
  * @param {number} offset 
  * @param {number} blockSize 
- * @param {CipherProcessor} cipher 
+ * @param {BlockCipherProcessor} cipher 
  */
 function generateKeystreamAndEncrypt(target, words, offset, blockSize, cipher) {
 	// Shortcut

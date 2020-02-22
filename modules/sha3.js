@@ -325,8 +325,8 @@ const _SHA3 = new HasherSHA3();
  *
  * @example
  *
- *     let hash = CryptoJS.SHA3('message');
- *     let hash = CryptoJS.SHA3(wordArray);
+ *     let hash = SHA3('message');
+ *     let hash = SHA3(wordArray);
  */
 export function SHA3(message, cfg) {
 	return _SHA3.init(cfg).finalize(message);

@@ -31,7 +31,7 @@ class EncoderUtf16BE extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let utf16String = CryptoJS.enc.Utf16.stringify(wordArray);
+	 *     let utf16String = Utf16.stringify(wordArray);
 	 */
 	stringify(wordArray) {
 		// Shortcuts
@@ -59,7 +59,7 @@ class EncoderUtf16BE extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let wordArray = CryptoJS.enc.Utf16.parse(utf16String);
+	 *     let wordArray = Utf16.parse(utf16String);
 	 */
 	parse(utf16Str) {
 		// Shortcut
@@ -92,7 +92,7 @@ class EncoderUtf16LE extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let utf16Str = CryptoJS.enc.Utf16LE.stringify(wordArray);
+	 *     let utf16Str = Utf16LE.stringify(wordArray);
 	 */
 	stringify(wordArray) {
 		// Shortcuts
@@ -120,7 +120,7 @@ class EncoderUtf16LE extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let wordArray = CryptoJS.enc.Utf16LE.parse(utf16Str);
+	 *     let wordArray = Utf16LE.parse(utf16Str);
 	 */
 	parse(utf16Str) {
 		// Shortcut

@@ -6,7 +6,7 @@
 "use strict";
 
 import { ModeProcessor, Mode } from "./mode.js"
-import { CipherProcessor } from "./cipher-processor.js";
+import { BlockCipherProcessor } from "./cipher-core.js";
 
 /**
  * Electronic Codebook block mode.
@@ -15,7 +15,7 @@ export class ModeECB extends Mode {
 	/**
 	 * Creates this mode for encryption.
 	 *
-	 * @param {CipherProcessor} cipher A block cipher instance.
+	 * @param {BlockCipherProcessor} cipher A block cipher instance.
 	 * @param {Array<number>} iv The IV words.
 	 * 
 	 * @returns {ModeProcessor}
@@ -27,7 +27,7 @@ export class ModeECB extends Mode {
 	/**
 	 * Creates this mode for encryption.
 	 *
-	 * @param {CipherProcessor} cipher A block cipher instance.
+	 * @param {BlockCipherProcessor} cipher A block cipher instance.
 	 * @param {Array<number>} iv The IV words.
 	 * 
 	 * @returns {ModeProcessor}

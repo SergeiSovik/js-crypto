@@ -20,7 +20,7 @@ export class PaddingPkcs7 extends Padding {
 	 *
 	 * @example
 	 *
-	 *     CryptoJS.Pkcs7.pad(wordArray, 4);
+	 *     Pkcs7.pad(wordArray, 4);
 	 */
 	pad(data, blockSize) {
 		// Shortcut
@@ -50,7 +50,7 @@ export class PaddingPkcs7 extends Padding {
 	 *
 	 * @example
 	 *
-	 *     CryptoJS.Pkcs7.unpad(wordArray);
+	 *     Pkcs7.unpad(wordArray);
 	 */
 	unpad(data) {
 		// Get number of padding bytes from last byte

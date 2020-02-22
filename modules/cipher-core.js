@@ -370,7 +370,7 @@ class CipherWrapper {
 	 *
 	 * @example
 	 *
-	 *     let ciphertextParams = CryptoJS.lib.SerializableCipher._parse(ciphertextStringOrParams, format);
+	 *     let ciphertextParams = SerializableCipher._parse(ciphertextStringOrParams, format);
 	 */
 	_parse(ciphertext, format) {
 		if (typeof ciphertext == 'string') {
@@ -548,7 +548,7 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 	 * @example
 	 *
 	 *     let ciphertextParams = ClassPasswordBasedCipher.encrypt(CipherAES, message, 'password');
-	 *     let ciphertextParams = ClassPasswordBasedCipher.encrypt(CipherAES, message, 'password', { format: CryptoJS.format.OpenSSL });
+	 *     let ciphertextParams = ClassPasswordBasedCipher.encrypt(CipherAES, message, 'password', { format: OpenSSL });
 	 */
 	encrypt(cipher, message, password, cfg) {
 		this.updateConfig(cfg);
@@ -584,8 +584,8 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 	 *
 	 * @example
 	 *
-	 *     let plaintext = ClassPasswordBasedCipher.decrypt(CipherAES, formattedCiphertext, 'password', { format: CryptoJS.format.OpenSSL });
-	 *     let plaintext = ClassPasswordBasedCipher.decrypt(CipherAES, ciphertextParams, 'password', { format: CryptoJS.format.OpenSSL });
+	 *     let plaintext = ClassPasswordBasedCipher.decrypt(CipherAES, formattedCiphertext, 'password', { format: OpenSSL });
+	 *     let plaintext = ClassPasswordBasedCipher.decrypt(CipherAES, ciphertextParams, 'password', { format: OpenSSL });
 	 */
 	decrypt(cipher, ciphertext, password, cfg) {
 		this.updateConfig(cfg);

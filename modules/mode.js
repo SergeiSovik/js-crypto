@@ -44,7 +44,7 @@ export class ModeProcessor {
 	 *
 	 * @example
 	 *
-	 *     let mode = CryptoJS.CBC.createEncryptor(cipher, iv.words);
+	 *     let mode = CBC.createEncryptor(cipher, iv.words);
 	 */
 	constructor(cipher, iv) {
 		/** @type {BlockCipherProcessor} */ this._cipher;

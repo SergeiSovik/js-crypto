@@ -45,8 +45,8 @@ const _SHA384 = new HasherSHA384();
  *
  * @example
  *
- *     let hash = CryptoJS.SHA384('message');
- *     let hash = CryptoJS.SHA384(wordArray);
+ *     let hash = SHA384('message');
+ *     let hash = SHA384(wordArray);
  */
 export function SHA384(message) {
 	return _SHA384.init().finalize(message);

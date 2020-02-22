@@ -21,7 +21,7 @@ class EncoderHex extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let hexString = CryptoJS.Hex.stringify(wordArray);
+	 *     let hexString = Hex.stringify(wordArray);
 	 */
 	stringify(wordArray) {
 		// Shortcuts
@@ -50,7 +50,7 @@ class EncoderHex extends Encoder {
 	 *
 	 * @example
 	 *
-	 *     let wordArray = CryptoJS.Hex.parse(hexString);
+	 *     let wordArray = Hex.parse(hexString);
 	 */
 	parse(hexStr) {
 		// Shortcut
