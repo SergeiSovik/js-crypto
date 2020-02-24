@@ -22,7 +22,7 @@ class ClassCipherRabbitLegacy extends Cipher {
 	 * Creates this cipher in encryption mode.
 	 *
 	 * @param {WordArray} key The key.
-	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {StreamCipherProcessor} A cipher instance.
 	 *
@@ -38,7 +38,7 @@ class ClassCipherRabbitLegacy extends Cipher {
 	 * Creates this cipher in decryption mode.
 	 *
 	 * @param {WordArray} key The key.
-	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {StreamCipherProcessor} A cipher instance.
 	 *
@@ -69,7 +69,7 @@ class CipherRabbitLegacyProcessor extends StreamCipherProcessor {
 	/**
 	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
 	 * @param {WordArray} key The key.
-	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	constructor(xformMode, key, cfg) {
 		super(xformMode, key, cfg);

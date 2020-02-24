@@ -15,7 +15,7 @@ import { WordArray } from "./wordarray.js"
  */
 export class ConfigCipher {
 	/**
-	 * @param {*=} cfg (Optional) The configuration options.
+	 * @param {Object<string,*>=} cfg (Optional) The configuration options.
 	 */
 	constructor(cfg) {
 		/** @type {WordArray} */ this.iv;
@@ -34,7 +34,7 @@ export class CipherProcessor extends BufferedBlockAlgorithm {
 	/**
 	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
 	 * @param {WordArray} key The key.
-	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @example
 	 *
@@ -55,7 +55,7 @@ export class CipherProcessor extends BufferedBlockAlgorithm {
 	 *
 	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
 	 * @param {WordArray} key The key.
-	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	init(xformMode, key, cfg) {
 		this.updateConfig(cfg);
@@ -71,7 +71,7 @@ export class CipherProcessor extends BufferedBlockAlgorithm {
 	}
 
 	/**
-	 * @param {*=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	updateConfig(cfg) {
 		// Apply config defaults

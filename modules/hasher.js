@@ -88,7 +88,7 @@ export class Hasher extends BufferedBlockAlgorithm {
 	 * Finalizes the hash computation.
 	 * Note that the finalize operation is effectively a destructive, read-once operation.
 	 *
-	 * @param {WordArray|string} messageUpdate (Optional) A final message update.
+	 * @param {(WordArray|string)=} messageUpdate (Optional) A final message update.
 	 *
 	 * @return {WordArray} The hash.
 	 *
@@ -100,7 +100,7 @@ export class Hasher extends BufferedBlockAlgorithm {
 	 */
 	finalize(messageUpdate) {
 		// Final message update
-		if (messageUpdate) {
+		if (messageUpdate !== undefined) {
 			this._append(messageUpdate);
 		}
 

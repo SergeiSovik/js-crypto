@@ -26,7 +26,7 @@ import { Formatter } from "./format.js"
  */
 export class CipherParams {
 	/**
-	 * @param {*=} cfg An object with any of the possible cipher parameters.
+	 * @param {Object<string,*>=} cfg An object with any of the possible cipher parameters.
 	 *
 	 * @example
 	 *

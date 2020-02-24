@@ -100,7 +100,7 @@ export class HMAC {
 	 * Finalizes the HMAC computation.
 	 * Note that the finalize operation is effectively a destructive, read-once operation.
 	 *
-	 * @param {WordArray|string} messageUpdate (Optional) A final message update.
+	 * @param {(WordArray|string)=} messageUpdate (Optional) A final message update.
 	 *
 	 * @return {WordArray} The HMAC.
 	 *
