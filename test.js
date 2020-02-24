@@ -65,6 +65,7 @@ for (let i = 0; i < list.length; i++) {
 
 	console.log('AES(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }
+
 {
 	let data = 'ABCD';
 	let password = '1234';
