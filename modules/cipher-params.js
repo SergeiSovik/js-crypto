@@ -10,6 +10,7 @@ import { Cipher } from "./cipher-core.js"
 import { Mode } from "./mode.js"
 import { Padding } from "./padding.js"
 import { Formatter } from "./format.js"
+import { Dictionary } from "./../../../include/type.js"
 
 /**
  * A collection of cipher parameters.
@@ -26,7 +27,7 @@ import { Formatter } from "./format.js"
  */
 export class CipherParams {
 	/**
-	 * @param {Object<string,*>=} cfg An object with any of the possible cipher parameters.
+	 * @param {Dictionary=} cfg An object with any of the possible cipher parameters.
 	 *
 	 * @example
 	 *

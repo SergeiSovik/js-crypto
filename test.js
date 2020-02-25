@@ -20,6 +20,7 @@ import { Hex } from "./modules/enc-hex.js"
 import { Latin1 } from "./modules/enc-latin1"
 import { Utf8 } from "./modules/enc-utf8.js"
 import { Base64 } from "./modules/enc-base64"
+import { Dictionary } from "./../../include/type.js"
 
 import { RIPEMD160 } from "./modules/ripemd160.js"
 import { MD5 } from "./modules/md5.js"
@@ -61,7 +62,7 @@ for (let i = 0; i < list.length; i++) {
 	let data = 'ABCD';
 	let password = '1234';
 	let enc = AES.encrypt(data, password).toString(OpenSSL);
-	let dec = AES.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+	let dec = AES.decrypt(enc, password, /** @type {Dictionary} */ ( {'format': OpenSSL} )).toString(Utf8);
 
 	console.log('AES(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }
@@ -70,7 +71,7 @@ for (let i = 0; i < list.length; i++) {
 	let data = 'ABCD';
 	let password = '1234';
 	let enc = DES.encrypt(data, password).toString(OpenSSL);
-	let dec = DES.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+	let dec = DES.decrypt(enc, password, /** @type {Dictionary} */ ( {'format': OpenSSL} )).toString(Utf8);
 
 	console.log('DES(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }
@@ -79,7 +80,7 @@ for (let i = 0; i < list.length; i++) {
 	let data = 'ABCD';
 	let password = '1234';
 	let enc = TripleDES.encrypt(data, password).toString(OpenSSL);
-	let dec = TripleDES.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+	let dec = TripleDES.decrypt(enc, password, /** @type {Dictionary} */ ( {'format': OpenSSL} )).toString(Utf8);
 
 	console.log('TripleDES(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }
@@ -88,7 +89,7 @@ for (let i = 0; i < list.length; i++) {
 	let data = 'ABCD';
 	let password = '1234';
 	let enc = Rabbit.encrypt(data, password).toString(OpenSSL);
-	let dec = Rabbit.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+	let dec = Rabbit.decrypt(enc, password, /** @type {Dictionary} */ ( {'format': OpenSSL} )).toString(Utf8);
 
 	console.log('Rabbit(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }
@@ -97,7 +98,7 @@ for (let i = 0; i < list.length; i++) {
 	let data = 'ABCD';
 	let password = '1234';
 	let enc = RabbitLegacy.encrypt(data, password).toString(OpenSSL);
-	let dec = RabbitLegacy.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+	let dec = RabbitLegacy.decrypt(enc, password, /** @type {Dictionary} */ ( {'format': OpenSSL} )).toString(Utf8);
 
 	console.log('RabbitLegacy(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }
@@ -106,7 +107,7 @@ for (let i = 0; i < list.length; i++) {
 	let data = 'ABCD';
 	let password = '1234';
 	let enc = RC4.encrypt(data, password).toString(OpenSSL);
-	let dec = RC4.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+	let dec = RC4.decrypt(enc, password, /** @type {Dictionary} */ ( {'format': OpenSSL} )).toString(Utf8);
 
 	console.log('RC4(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }
@@ -115,7 +116,7 @@ for (let i = 0; i < list.length; i++) {
 	let data = 'ABCD';
 	let password = '1234';
 	let enc = RC4Drop.encrypt(data, password).toString(OpenSSL);
-	let dec = RC4Drop.decrypt(enc, password, {'format': OpenSSL}).toString(Utf8);
+	let dec = RC4Drop.decrypt(enc, password, /** @type {Dictionary} */ ( {'format': OpenSSL} )).toString(Utf8);
 
 	console.log('RC4Drop(' + data + ')', data == dec ? 'OK => ' + enc : ('FAIL: ' + data +  ' => ' + enc + ' != ' + dec));
 }

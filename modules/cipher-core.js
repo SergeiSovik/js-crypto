@@ -13,7 +13,8 @@ import { WordArray } from "./wordarray.js"
 import { ClassEvpKDF } from "./evpkdf.js"
 import { CBC } from "./mode-cbc.js"
 import { Pkcs7 } from "./pad-pkcs7.js"
-import { CipherProcessor, ConfigCipher } from "./cipher-processor.js";
+import { CipherProcessor, ConfigCipher } from "./cipher-processor.js"
+import { Dictionary } from "./../../../include/type.js"
 
 /** @const {number} ENC_XFORM_MODE A constant representing encryption mode. */
 export const ENC_XFORM_MODE = 1;
@@ -34,7 +35,7 @@ export class Cipher {
 	 * @abstract Creates this cipher in encryption mode.
 	 *
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {CipherProcessor} A cipher instance.
 	 *
@@ -50,7 +51,7 @@ export class Cipher {
 	 * Creates this cipher in decryption mode.
 	 *
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {CipherProcessor} A cipher instance.
 	 *
@@ -81,7 +82,7 @@ export class CipherHelper {
 	/**
 	 * @param {WordArray|string} message The message to encrypt.
 	 * @param {WordArray|string} key The password.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 * @returns {CipherParams}
 	 */
 	encrypt(message, key, cfg) {
@@ -95,7 +96,7 @@ export class CipherHelper {
 	/**
 	 * @param {CipherParams|string} ciphertext The ciphertext to decrypt.
 	 * @param {WordArray|string} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 * @returns {WordArray}
 	 */
 	decrypt(ciphertext, key, cfg) {
@@ -116,7 +117,7 @@ export class StreamCipherProcessor extends CipherProcessor {
 	/**
 	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	constructor(xformMode, key, cfg) {
 		super(xformMode, key, cfg);
@@ -140,7 +141,7 @@ export class StreamCipherProcessor extends CipherProcessor {
  */
 export class ConfigBlockCipherProcessor extends ConfigCipher {
 	/**
-	 * @param {Object<string,*>=} cfg
+	 * @param {Dictionary=} cfg
 	 */
 	constructor(cfg) {
 		super(cfg);
@@ -162,7 +163,7 @@ export class BlockCipherProcessor extends CipherProcessor {
 	/**
 	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	constructor(xformMode, key, cfg) {
 		super(xformMode, key, cfg);
@@ -175,7 +176,7 @@ export class BlockCipherProcessor extends CipherProcessor {
 
 	/**
 	 * @override
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	updateConfig(cfg) {
 		// Apply config defaults
@@ -253,7 +254,7 @@ export class BlockCipherProcessor extends CipherProcessor {
  */
 export class CipherWrapperConfig {
 	/**
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this hash computation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this hash computation.
 	 */
 	constructor(cfg) {
 		/** @type {Formatter} */ this.format = OpenSSL;
@@ -267,7 +268,7 @@ export class CipherWrapperConfig {
  */
 class CipherWrapper {
 	/**
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this hash computation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this hash computation.
 	 */
 	constructor(cfg) {
 		/** @type {CipherWrapperConfig} */ this.cfg;
@@ -276,14 +277,14 @@ class CipherWrapper {
 	}
 
 	/**
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this hash computation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this hash computation.
 	 */
 	init(cfg) {
 		this.updateConfig(cfg);
 	}
 
 	/**
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this hash computation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this hash computation.
 	 */
 	updateConfig(cfg) {
 		// Apply config defaults
@@ -296,7 +297,7 @@ class CipherWrapper {
 	 * @param {Cipher} cipher The cipher algorithm to use.
 	 * @param {WordArray|string} message The message to encrypt.
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {CipherParams} A cipher params object.
 	 */
@@ -311,7 +312,7 @@ class CipherWrapper {
 			// Shortcut
 			let cipherCfg = blockProcessor.cfg;
 	
-			return new CipherParams({
+			return new CipherParams(/** @type {Dictionary} */ ( {
 				'ciphertext': ciphertext,
 				'key': key,
 				'iv': cipherCfg.iv,
@@ -319,22 +320,22 @@ class CipherWrapper {
 				'mode': cipherCfg.mode,
 				'padding': cipherCfg.padding,
 				'blockSize': processor.blockSize,
-				'formatter': cfg.format
-			});
+				'formatter': cfg['format']
+			} ));
 		} else {
 			let ciphertext = processor.finalize(message);
 
 			// Shortcut
 			let cipherCfg = processor.cfg;
 	
-			return new CipherParams({
+			return new CipherParams(/** @type {Dictionary} */ ( {
 				'ciphertext': ciphertext,
 				'key': key,
 				'iv': cipherCfg.iv,
 				'algorithm': cipher,
 				'blockSize': processor.blockSize,
-				'formatter': cfg.format
-			});
+				'formatter': cfg['format']
+			} ));
 		}
 	}
 
@@ -344,7 +345,7 @@ class CipherWrapper {
 	 * @param {Cipher} cipher The cipher algorithm to use.
 	 * @param {CipherParams|string} ciphertext The ciphertext to decrypt.
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {WordArray | null} The plaintext.
 	 */
@@ -394,7 +395,7 @@ class ClassSerializableCipher extends CipherWrapper {
 	 * @param {Cipher} cipher The cipher algorithm to use.
 	 * @param {WordArray|string} message The message to encrypt.
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {CipherParams} A cipher params object.
 	 *
@@ -416,7 +417,7 @@ class ClassSerializableCipher extends CipherWrapper {
 	 * @param {Cipher} cipher The cipher algorithm to use.
 	 * @param {CipherParams|string} ciphertext The ciphertext to decrypt.
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {WordArray} The plaintext.
 	 *
@@ -486,7 +487,7 @@ export class ClassOpenSSLKdf extends KDF {
 		key.sigBytes = keySize * 4;
 
 		// Return params
-		return new CipherParams({ 'key': key, 'iv': iv, 'salt': salt });
+		return new CipherParams(/** @type {Dictionary} */ ( { 'key': key, 'iv': iv, 'salt': salt } ));
 	}
 }
 
@@ -499,7 +500,7 @@ export const OpenSSLKdf = new ClassOpenSSLKdf();
  */
 export class PasswordBasedCipherConfig extends CipherWrapperConfig {
 	/**
-	 * @param {Object<string,*>=} cfg
+	 * @param {Dictionary=} cfg
 	 */
 	constructor(cfg) {
 		super(cfg);
@@ -516,7 +517,7 @@ export class PasswordBasedCipherConfig extends CipherWrapperConfig {
  */
 export class ClassPasswordBasedCipher extends CipherWrapper {
 	/**
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this hash computation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this hash computation.
 	 */
 	constructor(cfg) {
 		super();
@@ -528,7 +529,7 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 
 	/**
 	 * @override
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this hash computation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this hash computation.
 	 */
 	updateConfig(cfg) {
 		// Apply config defaults
@@ -542,7 +543,7 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 	 * @param {Cipher} cipher The cipher algorithm to use.
 	 * @param {WordArray|string} message The message to encrypt.
 	 * @param {string} password The password.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {CipherParams} A cipher params object.
 	 *
@@ -559,7 +560,7 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 		// Derive key and other params
 		let derivedParams = this.cfg.kdf.execute(password, cipher.keySize, cipher.ivSize);
 
-		cfg = cfg || {};
+		cfg = cfg || /** @type {Dictionary} */ ( {} );
 
 		// Add IV to config
 		cfg['iv'] = derivedParams.iv;
@@ -579,7 +580,7 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 	 * @param {Cipher} cipher The cipher algorithm to use.
 	 * @param {CipherParams|string} ciphertext The ciphertext to decrypt.
 	 * @param {string} password The password.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {WordArray} The plaintext.
 	 *
@@ -599,7 +600,7 @@ export class ClassPasswordBasedCipher extends CipherWrapper {
 		// Derive key and other params
 		let derivedParams = this.cfg.kdf.execute(password, cipher.keySize, cipher.ivSize, ciphertext.salt);
 
-		cfg = cfg || {};
+		cfg = cfg || /** @type {Dictionary} */ ( {} );
 
 		// Add IV to config
 		cfg['iv'] = derivedParams.iv;

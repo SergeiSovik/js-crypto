@@ -8,6 +8,7 @@
 import { CipherParams } from "./cipher-params.js"
 import { WordArray } from "./wordarray.js"
 import { Base64 } from "./enc-base64.js"
+import { Dictionary } from "./../../../include/type.js"
 
 /**
  * @abstract formatting strategy.
@@ -92,7 +93,7 @@ export class FormatterOpenSSL extends Formatter {
 			ciphertext.sigBytes -= 16;
 		}
 
-		return new CipherParams({ 'ciphertext': ciphertext, 'salt': salt });
+		return new CipherParams(/** @type {Dictionary} */ ( { 'ciphertext': ciphertext, 'salt': salt } ));
 	}
 }
 

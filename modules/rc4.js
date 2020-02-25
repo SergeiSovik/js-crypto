@@ -7,6 +7,7 @@
 
 import { WordArray } from "./wordarray.js"
 import { Cipher, ENC_XFORM_MODE, DEC_XFORM_MODE, CipherHelper, StreamCipherProcessor } from "./cipher-core.js";
+import { Dictionary } from "./../../../include/type.js"
 
 /**
  * RC4 stream cipher algorithm.
@@ -23,7 +24,7 @@ class ClassCipherRC4 extends Cipher {
 	 * Creates this cipher in encryption mode.
 	 *
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {StreamCipherProcessor} A cipher instance.
 	 *
@@ -39,7 +40,7 @@ class ClassCipherRC4 extends Cipher {
 	 * Creates this cipher in decryption mode.
 	 *
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {StreamCipherProcessor} A cipher instance.
 	 *
@@ -61,7 +62,7 @@ class CipherRC4Processor extends StreamCipherProcessor {
 	/**
 	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	constructor(xformMode, key, cfg) {
 		super(xformMode, key, cfg);
@@ -157,7 +158,7 @@ class ClassCipherRC4Drop extends ClassCipherRC4 {
 	 * Creates this cipher in encryption mode.
 	 *
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {StreamCipherProcessor} A cipher instance.
 	 *
@@ -173,7 +174,7 @@ class ClassCipherRC4Drop extends ClassCipherRC4 {
 	 * Creates this cipher in decryption mode.
 	 *
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 *
 	 * @return {StreamCipherProcessor} A cipher instance.
 	 *
@@ -195,7 +196,7 @@ class CipherRC4DropProcessor extends CipherRC4Processor {
 	/**
 	 * @param {number} xformMode Either the encryption or decryption transormation mode constant.
 	 * @param {WordArray} key The key.
-	 * @param {Object<string,*>=} cfg (Optional) The configuration options to use for this operation.
+	 * @param {Dictionary=} cfg (Optional) The configuration options to use for this operation.
 	 */
 	constructor(xformMode, key, cfg) {
 		super(xformMode, key, cfg);

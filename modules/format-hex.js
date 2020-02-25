@@ -8,6 +8,7 @@
 import { Formatter } from "./format.js"
 import { CipherParams } from "./cipher-params.js"
 import { Hex as EncoderHex } from "./enc-hex.js"
+import { Dictionary } from "./../../../include/type.js"
 
 /**
  * Hex formatting strategy.
@@ -41,7 +42,7 @@ export class FormatterHex extends Formatter {
 	 */
 	parse(input) {
 		let ciphertext = EncoderHex.parse(input);
-		return new CipherParams({ 'ciphertext': ciphertext });
+		return new CipherParams(/** @type {Dictionary} */ ( { 'ciphertext': ciphertext } ));
 	}
 }
 
