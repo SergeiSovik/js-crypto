@@ -1,12 +1,12 @@
 /**
  * Original work Copyright (c) 2009-2013 Jeff Mott
- * Modified work Copyright (c) 2020 Sergio Rando <sergio.rando@yahoo.com>
+ * Modified work Copyright (c) 2020 Sergei Sovik <sergeisovik@yahoo.com>
  *
  * THIS IS FIX of 'core.js' to fix Hmac issue.
  * https://code.google.com/p/crypto-js/issues/detail?id=84
  * https://crypto-js.googlecode.com/svn-history/r667/branches/3.x/src/core.js
  * 
- * FIXED Int32Array & Uint32Array by Sergio Rando
+ * FIXED Int32Array & Uint32Array by Sergei Sovik
  */
 
 "use strict";

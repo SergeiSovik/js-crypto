@@ -1,7 +1,7 @@
 CryptoJS
 
 	Original work Copyright (c) 2009-2013 Jeff Mott
-	Modified work Copyright (c) 2020 Sergio Rando <sergio.rando@yahoo.com>
+	Modified work Copyright (c) 2020 Sergei Sovik <sergeisovik@yahoo.com>
 
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
@@ -24,7 +24,7 @@ CryptoJS
 
 RIPEMD160
 	Original work Copyright (c) 2012 by Cédric Mesnil
-	Modified work Copyright (c) 2020 Sergio Rando <sergio.rando@yahoo.com>
+	Modified work Copyright (c) 2020 Sergei Sovik <sergeisovik@yahoo.com>
 	
 	All rights reserved.
 

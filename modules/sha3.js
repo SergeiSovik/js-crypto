@@ -1,8 +1,8 @@
 /**
  * Original work Copyright (c) 2009-2013 Jeff Mott
- * Modified work Copyright (c) 2020 Sergio Rando <sergio.rando@yahoo.com>
+ * Modified work Copyright (c) 2020 Sergei Sovik <sergeisovik@yahoo.com>
  * 
- * FIXED SHA3 (FIPS-202 Spec) Padding by Sergio Rando 
+ * FIXED SHA3 (FIPS-202 Spec) Padding by Sergei Sovik 
  */
 
 "use strict";

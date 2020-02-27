@@ -1,6 +1,6 @@
 /**
  * Original work Copyright (c) 2012 by Cédric Mesnil
- * Modified work Copyright (c) 2020 Sergio Rando <sergio.rando@yahoo.com>
+ * Modified work Copyright (c) 2020 Sergei Sovik <sergeisovik@yahoo.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
