@@ -37,6 +37,8 @@ import { Rabbit } from "./modules/rabbit.js"
 import { RabbitLegacy } from "./modules/rabbit-legacy.js"
 import { RC4, RC4Drop } from "./modules/rc4.js"
 
+//platform.console.log('js-crypto', 'Skip Test');
+
 let wa = Utf8.parse('ABCD');
 
 let list = [
