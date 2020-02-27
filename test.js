@@ -40,18 +40,18 @@ import { RC4, RC4Drop } from "./modules/rc4.js"
 let wa = Utf8.parse('ABCD');
 
 let list = [
-	[ 'Hex(ABCD)',		Hex.stringify(wa),				'41424344' ],
-	[ 'Latin1(ABCD)',	Latin1.stringify(wa),			'ABCD' ],
-	[ 'Utf8(ABCD)',		Utf8.stringify(wa),				'ABCD' ],
-	[ 'Base64(ABCD)',	Base64.stringify(wa),			'QUJDRA=='],
-	[ 'RIPEMD160(ABCD)',RIPEMD160('ABCD').toString(),	'494E236B8F3EE8DF57086FA0B7479F31CBFC06D7'.toLowerCase()],
-	[ 'MD5(ABCD)',		MD5('ABCD').toString(),			'cb08ca4a7bb5f9683c19133a84872ca7'.toLowerCase() ],
-	[ 'SHA1(ABCD)',		SHA1('ABCD').toString(),		'fb2f85c88567f3c8ce9b799c7c54642d0c7b41f6'.toLowerCase() ],
-	[ 'SHA224(ABCD)',	SHA224('ABCD').toString(),		'44a1d724940a36e1b7adee6b5c7bafab2368bb02ddda3c90d74f60b6'.toLowerCase() ],
-	[ 'SHA256(ABCD)',	SHA256('ABCD').toString(),		'e12e115acf4552b2568b55e93cbd39394c4ef81c82447fafc997882a02d23677'.toLowerCase() ],
-	[ 'SHA384(ABCD)',	SHA384('ABCD').toString(),		'6f17e23899d2345a156baf69e7c02bbdda3be057367849c02add6a4aecbbd039a660ba815c95f2f145883600b7e9133d'.toLowerCase() ],
-	[ 'SHA512(ABCD)',	SHA512('ABCD').toString(),		'49ec55bd83fcd67838e3d385ce831669e3f815a7f44b7aa5f8d52b5d42354c46d89c8b9d06e47a797ae4fbd22291be15bcc35b07735c4a6f92357f93d5a33d9b'.toLowerCase() ],
-	[ 'SHA3(ABCD)',		SHA3('ABCD').toString(),		'5a0b238d044abb7bda3cb50998f35ccc837ae5abfe0baca4cca4a95d8d7dd045e0704734043a5557150140fdcca1662f9d6d7e2fe62a24bc4b9fbeab09d48462'.toLowerCase() ],
+	[ 'Hex(ABCD)',			Hex.stringify(wa),				'41424344' ],
+	[ 'Latin1(ABCD)',		Latin1.stringify(wa),			'ABCD' ],
+	[ 'Utf8(ABCD)',			Utf8.stringify(wa),				'ABCD' ],
+	[ 'Base64(ABCD)',		Base64.stringify(wa),			'QUJDRA=='],
+	[ 'RIPEMD160(ABCD)',	RIPEMD160('ABCD').toString(),	'494E236B8F3EE8DF57086FA0B7479F31CBFC06D7'.toLowerCase()],
+	[ 'MD5(ABCD)',			MD5('ABCD').toString(),			'cb08ca4a7bb5f9683c19133a84872ca7'.toLowerCase() ],
+	[ 'SHA1(ABCD)',			SHA1('ABCD').toString(),		'fb2f85c88567f3c8ce9b799c7c54642d0c7b41f6'.toLowerCase() ],
+	[ 'SHA224(ABCD)',		SHA224('ABCD').toString(),		'44a1d724940a36e1b7adee6b5c7bafab2368bb02ddda3c90d74f60b6'.toLowerCase() ],
+	[ 'SHA256(ABCD)',		SHA256('ABCD').toString(),		'e12e115acf4552b2568b55e93cbd39394c4ef81c82447fafc997882a02d23677'.toLowerCase() ],
+	[ 'SHA384(ABCD)',		SHA384('ABCD').toString(),		'6f17e23899d2345a156baf69e7c02bbdda3be057367849c02add6a4aecbbd039a660ba815c95f2f145883600b7e9133d'.toLowerCase() ],
+	[ 'SHA512(ABCD)',		SHA512('ABCD').toString(),		'49ec55bd83fcd67838e3d385ce831669e3f815a7f44b7aa5f8d52b5d42354c46d89c8b9d06e47a797ae4fbd22291be15bcc35b07735c4a6f92357f93d5a33d9b'.toLowerCase() ],
+	[ 'SHA3(ABCD)',			SHA3('ABCD').toString(),		'5a0b238d044abb7bda3cb50998f35ccc837ae5abfe0baca4cca4a95d8d7dd045e0704734043a5557150140fdcca1662f9d6d7e2fe62a24bc4b9fbeab09d48462'.toLowerCase() ],
 ];
 
 for (let i = 0; i < list.length; i++) {
